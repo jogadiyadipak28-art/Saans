@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root { --background: #f7faf9; --foreground: #172b2a; --card: #ffffff; --paper: #f0f5f3; --line: #b9ceca; --muted: #435e5b; --teal: #087e73; --severe: #a3332f; }
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --color-card: var(--card);
+  --color-paper: var(--paper);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-teal: var(--teal);
+  --color-severe: var(--severe);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+:focus-visible { outline: 3px solid #087e73; outline-offset: 3px; }
+a { color: inherit; }
+.nav-link[aria-current='page'] { background-color: #00645b; color: #fff; }
+button, input, select, textarea { font: inherit; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+:root[data-theme='dark'] { --background: #10201f; --foreground: #e8f1ee; --card: #19302e; --paper: #203b38; --line: #41605c; --muted: #b3c8c4; --teal: #6dd2c3; --severe: #ff8d82; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --background: #10201f; --foreground: #e8f1ee; --card: #19302e; --paper: #203b38; --line: #41605c; --muted: #b3c8c4; --teal: #6dd2c3; --severe: #ff8d82; }
+}
+:root[data-text='large'] { font-size: 112.5%; }
+.btn { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: .5rem; padding: .55rem .9rem; background: var(--card); cursor: pointer; }
+.btn.bg-teal { background-color: #00645b; }
+.btn.bg-severe { background-color: var(--severe); }
+.btn:disabled { cursor: not-allowed; opacity: .6; }
+.field { min-height: 2.75rem; width: 100%; border: 1px solid var(--line); border-radius: .5rem; padding: .6rem .75rem; background: var(--card); color: var(--foreground); }
