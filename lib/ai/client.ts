@@ -70,6 +70,20 @@ function openAiUrl(config: LlmConfig): string {
   return `${config.baseUrl || 'https://api.openai.com'}/v1/chat/completions`
 }
 
+function openAiBody(config: LlmConfig, args: CompleteArgs, stream: boolean) {
+  const groq = config.baseUrl.includes('api.groq.com')
+  const gptOss = groq && config.model.startsWith('openai/gpt-oss-')
+  return {
+    model: config.model,
+    messages: args.messages,
+    ...(groq ? { max_completion_tokens: Math.max(args.maxTokens + 512, 1024) } : { max_tokens: args.maxTokens }),
+    temperature: 0.2,
+    stream,
+    ...(args.json === false ? {} : { response_format: { type: 'json_object' } }),
+    ...(gptOss ? { reasoning_effort: 'low', reasoning_format: 'hidden' } : {}),
+  }
+}
+
 async function completeOpenAI(config: LlmConfig, args: CompleteArgs, stream: boolean): Promise<string> {
   const response = await fetch(openAiUrl(config), {
     method: 'POST',
@@ -78,14 +92,7 @@ async function completeOpenAI(config: LlmConfig, args: CompleteArgs, stream: boo
       authorization: `Bearer ${config.apiKey}`,
       'content-type': 'application/json',
     },
-    body: JSON.stringify({
-      model: config.model,
-      messages: args.messages,
-      max_tokens: args.maxTokens,
-      temperature: 0.2,
-      stream,
-      ...(args.json === false ? {} : { response_format: { type: 'json_object' } }),
-    }),
+    body: JSON.stringify(openAiBody(config, args, stream)),
   })
   if (!response.ok) throw new Error(`LLM status ${response.status}`)
   const payload = (await response.json()) as { choices?: { message?: { content?: string } }[] }
@@ -100,14 +107,7 @@ async function* streamOpenAI(config: LlmConfig, args: CompleteArgs): AsyncGenera
       authorization: `Bearer ${config.apiKey}`,
       'content-type': 'application/json',
     },
-    body: JSON.stringify({
-      model: config.model,
-      messages: args.messages,
-      max_tokens: args.maxTokens,
-      temperature: 0.2,
-      stream: true,
-      ...(args.json === false ? {} : { response_format: { type: 'json_object' } }),
-    }),
+    body: JSON.stringify(openAiBody(config, args, true)),
   })
   if (!response.ok || !response.body) throw new Error(`LLM status ${response.status}`)
   yield* readSse(response.body, (json) => {

@@ -60,6 +60,23 @@ describe('single LLM adapter', () => {
     })
   })
 
+  it('uses Groq GPT-OSS reasoning and completion token settings for JSON output', async () => {
+    process.env.LLM_PROVIDER = 'openai'
+    process.env.LLM_MODEL = 'openai/gpt-oss-20b'
+    process.env.LLM_BASE_URL = 'https://api.groq.com/openai'
+    global.fetch = jest.fn().mockResolvedValue(response({ choices: [{ message: { content: '{"ok":true}' } }] }))
+
+    await llmComplete({ messages: [{ role: 'user', content: 'Return JSON.' }], maxTokens: 700 })
+
+    const init = (global.fetch as jest.Mock).mock.calls[0]?.[1] as RequestInit
+    const body = JSON.parse(String(init.body))
+    expect(body.max_completion_tokens).toBe(1212)
+    expect(body).not.toHaveProperty('max_tokens')
+    expect(body.reasoning_effort).toBe('low')
+    expect(body.reasoning_format).toBe('hidden')
+    expect(body.response_format).toEqual({ type: 'json_object' })
+  })
+
   it('maps Anthropic system messages and Google contents for completion', async () => {
     global.fetch = jest.fn().mockResolvedValueOnce(response({ content: [{ text: 'A' }, { text: 'B' }] }))
     process.env.LLM_PROVIDER = 'anthropic'
