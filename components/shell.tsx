@@ -19,7 +19,7 @@ const LINKS = [
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const { prefs, setPrefs, clearAll } = useSaans()
+  const { profile, prefs, setProfile, setPrefs, clearAll } = useSaans()
   const t = (path: string) => translate(prefs.language, path, prefs.simple)
 
   return (
@@ -76,6 +76,21 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </nav>
       </header>
       <main id="content" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
+        {profile ? (
+          <label className="mb-4 flex min-h-11 items-start gap-2 rounded-lg border border-line bg-card p-3">
+            <input
+              className="mt-1"
+              type="checkbox"
+              checked={profile.shareOptIn}
+              aria-describedby="model-sharing-help"
+              onChange={(event) => setProfile({ ...profile, shareOptIn: event.target.checked })}
+            />
+            <span>
+              <span className="block font-semibold">{t('onboarding.share')}</span>
+              <span id="model-sharing-help" className="block text-sm text-muted">{t('onboarding.shareHelp')}</span>
+            </span>
+          </label>
+        ) : null}
         {children}
       </main>
       <footer className="border-t border-line px-4 py-6 text-sm text-muted">
