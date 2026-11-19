@@ -22,9 +22,9 @@ const en = {
   },
   banner: {
     airDemo: 'Demo data, not live',
-    wordingDemo: 'AI wording could not load. Saans is showing its built-in guidance. Refresh to try again; if it keeps happening, ask the site owner to check the AI provider setup.',
+    wordingUnavailable: 'AI wording could not load. Saans is showing its built-in guidance. Refresh to try again; if it keeps happening, ask the site owner to check the AI provider setup.',
     aiOff: 'AI personalization is off. No household details were sent to the AI. Turn on the sharing option above if you want AI-generated wording. Saans’s built-in guidance and impact estimates remain available.',
-    local: 'Numbers were calculated on this device. Nothing was uploaded. To request AI wording, turn on the household-sharing option above.',
+    local: 'AI-generated wording is off. To enable it, turn on the household-sharing option above. Your household details stay on this device while it is off.',
     safeAnswer: 'Saans used its built-in safety guidance for this question and did not ask the AI model to answer it.',
   },
   common: {
@@ -240,9 +240,9 @@ const hi = {
   },
   banner: {
     airDemo: 'Demo data, not live',
-    wordingDemo: 'AI से जवाब नहीं मिल सका। सांस अपनी पहले से बनी सलाह दिखा रहा है। फिर से कोशिश करने के लिए पेज रीफ़्रेश करें। समस्या बनी रहे तो साइट के संचालक से AI सेटअप जाँचने को कहें।',
+    wordingUnavailable: 'AI से जवाब नहीं मिल सका। सांस अपनी पहले से बनी सलाह दिखा रहा है। फिर से कोशिश करने के लिए पेज रीफ़्रेश करें। समस्या बनी रहे तो साइट के संचालक से AI सेटअप जाँचने को कहें।',
     aiOff: 'AI से निजी सलाह लेना बंद है। घर की कोई जानकारी AI को नहीं भेजी गई। AI से लिखी सलाह चाहिए तो ऊपर जानकारी साझा करने वाला विकल्प चालू करें। सांस की अपनी सलाह और असर के अनुमान फिर भी उपलब्ध हैं।',
-    local: 'आंकड़े इसी डिवाइस पर गिने गए हैं। कुछ अपलोड नहीं हुआ। AI से सलाह चाहिए तो ऊपर घर की जानकारी साझा करने वाला विकल्प चालू करें।',
+    local: 'AI से लिखी सलाह बंद है। इसे चालू करने के लिए ऊपर घर की जानकारी साझा करने वाला विकल्प चुनें। इसके बंद रहने तक घर की जानकारी इसी डिवाइस पर रहेगी।',
     safeAnswer: 'इस सवाल के लिए सांस ने अपनी सुरक्षा सलाह दी है और AI मॉडल से जवाब नहीं माँगा।',
   },
   common: {
@@ -452,9 +452,9 @@ const gu = {
   },
   banner: {
     airDemo: 'Demo data, not live',
-    wordingDemo: 'AI પાસેથી જવાબ મળી શક્યો નથી. સાંસ પોતાની તૈયાર સલાહ બતાવે છે. ફરી પ્રયાસ કરવા પેજ રિફ્રેશ કરો. સમસ્યા ચાલુ રહે તો સાઇટ સંચાલકને AI સેટઅપ તપાસવા કહો.',
+    wordingUnavailable: 'AI પાસેથી જવાબ મળી શક્યો નથી. સાંસ પોતાની તૈયાર સલાહ બતાવે છે. ફરી પ્રયાસ કરવા પેજ રિફ્રેશ કરો. સમસ્યા ચાલુ રહે તો સાઇટ સંચાલકને AI સેટઅપ તપાસવા કહો.',
     aiOff: 'AI દ્વારા વ્યક્તિગત સલાહ બંધ છે. ઘરની કોઈ માહિતી AI ને મોકલાઈ નથી. AI દ્વારા લખાયેલી સલાહ જોઈએ તો ઉપર ઘર શેર કરવાનો વિકલ્પ ચાલુ કરો. સાંસની પોતાની સલાહ અને અસરના અંદાજ ઉપલબ્ધ છે.',
-    local: 'આ ઉપકરણ પર આંકડા ગણાયા છે. કંઈ અપલોડ થયું નથી. AI સલાહ મેળવવા ઉપર ઘરની માહિતી શેર કરવાનો વિકલ્પ ચાલુ કરો.',
+    local: 'AI દ્વારા લખાયેલી સલાહ બંધ છે. તેને ચાલુ કરવા ઉપર ઘર શેર કરવાનો વિકલ્પ ચાલુ કરો. આ વિકલ્પ બંધ હોય ત્યાં સુધી ઘરની માહિતી આ ઉપકરણ પર જ રહેશે.',
     safeAnswer: 'આ પ્રશ્ન માટે સાંસે પોતાની સુરક્ષા સલાહ આપી છે અને AI મોડેલને જવાબ પૂછ્યો નથી.',
   },
   common: {

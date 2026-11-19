@@ -146,7 +146,7 @@ export async function POST(request: Request): Promise<Response> {
             type: 'done',
             answer,
             citations: citations.length ? citations : docs.slice(0, 2).map((doc) => sanitizeCitation(doc)),
-            bannerWording: source === 'fallback' || !process.env.LLM_API_KEY ? translate(body.language, 'banner.wordingDemo') : null,
+            bannerWording: source === 'fallback' || !process.env.LLM_API_KEY ? translate(body.language, 'banner.wordingUnavailable') : null,
             narrativeSource: process.env.LLM_API_KEY ? source : 'fallback',
             summary: fitted.summary,
           })

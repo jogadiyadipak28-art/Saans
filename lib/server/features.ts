@@ -47,7 +47,7 @@ function cites(query: string) {
 
 function wordingStatus(household: z.infer<typeof householdSchema>, source: 'model' | 'fallback') {
   if (!household.shareOptIn) return translate(household.language, 'banner.aiOff')
-  return source === 'fallback' ? translate(household.language, 'banner.wordingDemo') : null
+  return source === 'fallback' ? translate(household.language, 'banner.wordingUnavailable') : null
 }
 
 export async function buildPlan(household: z.infer<typeof householdSchema>) {
