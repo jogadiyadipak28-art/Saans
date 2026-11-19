@@ -45,6 +45,11 @@ function cites(query: string) {
   return retrieve(query, 4).map((doc) => sanitizeCitation({ id: doc.id, title: doc.title, source: doc.source, url: doc.url }))
 }
 
+function wordingStatus(household: z.infer<typeof householdSchema>, source: 'model' | 'fallback') {
+  if (!household.shareOptIn) return translate(household.language, 'banner.aiOff')
+  return source === 'fallback' ? translate(household.language, 'banner.wordingDemo') : null
+}
+
 export async function buildPlan(household: z.infer<typeof householdSchema>) {
   const air = await loadAir(household.latitude, household.longitude)
   const hourly = next24Pm25(air.snapshot)
@@ -68,7 +73,7 @@ export async function buildPlan(household: z.infer<typeof householdSchema>) {
     narrativeSource: worded.source,
     repaired: worded.repaired,
     bannerAir: air.banner,
-    bannerWording: worded.source === 'fallback' ? 'Demo wording, not a live model' : null,
+    bannerWording: wordingStatus(household, worded.source),
     aqi: air.aqi,
     snapshot: air.snapshot,
     hourlyPm25: hourly,
@@ -107,7 +112,7 @@ export async function buildIndoor(household: z.infer<typeof householdSchema>) {
     airSource: air.snapshot.source,
     narrativeSource: worded.source,
     bannerAir: air.banner,
-    bannerWording: worded.source === 'fallback' ? 'Demo wording, not a live model' : null,
+    bannerWording: wordingStatus(household, worded.source),
     indoorNow,
     indoorSealed,
     indoorDiy,
@@ -146,7 +151,7 @@ export async function buildAlternatives(household: z.infer<typeof householdSchem
   return {
     promptVersion: PROMPT_VERSION,
     narrativeSource: worded.source,
-    bannerWording: worded.source === 'fallback' ? 'Demo wording, not a live model' : null,
+    bannerWording: wordingStatus(household, worded.source),
     swaps,
     narrative: worded.data,
     citations: cites('transport cooking burning fuel'),
@@ -189,7 +194,7 @@ export async function buildAdvisory(household: z.infer<typeof householdSchema>, 
     airSource: air.snapshot.source,
     narrativeSource: worded.source,
     bannerAir: air.banner,
-    bannerWording: worded.source === 'fallback' ? 'Demo wording, not a live model' : null,
+    bannerWording: wordingStatus(household, worded.source),
     aqi: air.aqi,
     comparison,
     advisory: worded.data,

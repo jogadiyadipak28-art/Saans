@@ -72,7 +72,7 @@ export function Brief() {
           comparison,
           summary: narrative.summary,
           impact: narrative.impactExplanation,
-          bannerWording: 'Demo wording, not a live model',
+          bannerWording: null,
           local: true,
         })
       }

@@ -121,7 +121,7 @@ describe('serverless API route integration', () => {
       expect(JSON.stringify(stream.mock.calls[0]?.[0])).not.toContain('a.person@example.com')
       expect(JSON.stringify(stream.mock.calls[0]?.[0])).not.toContain('Asha Patel')
       expect(text).toContain('"narrativeSource":"fallback"')
-      expect(text).toContain('Demo wording, not a live model')
+      expect(text).toContain('AI wording could not load')
       expect(text).not.toContain('"type":"error"')
     } finally {
       if (originalKey === undefined) delete process.env.LLM_API_KEY

@@ -58,7 +58,7 @@ describe('Ask Saans interactions', () => {
       body: new ReadableStream({
         start(controller) {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'delta', text: 'General tip.' })}\n\n`))
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done', answer: 'General tip.', citations: [], summary: '', bannerWording: 'Demo wording, not a live model' })}\n\n`))
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done', answer: 'General tip.', citations: [], summary: '', bannerWording: 'AI wording could not load. Saans is showing its built-in guidance.' })}\n\n`))
           controller.close()
         },
       }),
@@ -68,7 +68,7 @@ describe('Ask Saans interactions', () => {
       await screen.findByRole('textbox')
       fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Give a tip.' } })
       fireEvent.click(screen.getByRole('button', { name: 'Send' }))
-      expect(await screen.findByText('Demo wording, not a live model')).toBeInTheDocument()
+      expect(await screen.findByText(/AI wording could not load/)).toBeInTheDocument()
     } finally {
       global.fetch = originalFetch
     }

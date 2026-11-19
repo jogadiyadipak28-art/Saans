@@ -20,7 +20,7 @@ describe('community advisory presentation', () => {
       ok: true,
       json: async () => ({
         bannerAir: null,
-        bannerWording: 'Demo wording, not a live model',
+        bannerWording: 'AI wording could not load. Saans is showing its built-in guidance.',
         airSource: 'live',
         advisory: {
           title: 'School air plan for Surat',
@@ -40,7 +40,7 @@ describe('community advisory presentation', () => {
     expect(screen.getByText('Check the local reading before outdoor activities.')).toBeInTheDocument()
     expect(screen.getByText('Move sports indoors during higher readings.')).toBeInTheDocument()
     expect(await screen.findByText('Tell families when outdoor plans change.')).toBeInTheDocument()
-    expect(await screen.findByText('Demo wording, not a live model')).toBeInTheDocument()
+    expect(await screen.findByText(/AI wording could not load/)).toBeInTheDocument()
     expect(screen.queryByText('airSource')).not.toBeInTheDocument()
     expect(screen.getByText('Draft ready. Please review it before sharing.')).toBeInTheDocument()
   })

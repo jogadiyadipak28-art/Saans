@@ -13,6 +13,7 @@ import { householdSchema } from '@/lib/schemas/household'
 import { delimit, sanitizeCitation, stripControl } from '@/lib/security/sanitize'
 import { redactPersonalIdentifiers } from '@/lib/security/pii'
 import { toErrorResponse } from '@/lib/security/http'
+import { translate } from '@/lib/i18n'
 
 const chatSchema = z
   .object({
@@ -77,7 +78,7 @@ export async function POST(request: Request): Promise<Response> {
               type: 'done',
               answer: decision.message,
               citations: [],
-              bannerWording: 'Demo wording, not a live model',
+              bannerWording: translate(body.language, 'banner.safeAnswer'),
               narrativeSource: 'guardrail',
               summary: body.summary ?? '',
             })
@@ -145,7 +146,7 @@ export async function POST(request: Request): Promise<Response> {
             type: 'done',
             answer,
             citations: citations.length ? citations : docs.slice(0, 2).map((doc) => sanitizeCitation(doc)),
-            bannerWording: source === 'fallback' || !process.env.LLM_API_KEY ? 'Demo wording, not a live model' : null,
+            bannerWording: source === 'fallback' || !process.env.LLM_API_KEY ? translate(body.language, 'banner.wordingDemo') : null,
             narrativeSource: process.env.LLM_API_KEY ? source : 'fallback',
             summary: fitted.summary,
           })

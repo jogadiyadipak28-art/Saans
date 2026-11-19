@@ -38,7 +38,15 @@ describe('feature composition', () => {
     const result = await buildIndoor(household)
     expect(result.indoorSealed.central).toBeLessThan(result.indoorNow.central)
     expect(result.hacks.length).toBeGreaterThan(0)
-    expect(result.bannerWording).toContain('Demo wording')
+    expect(result.bannerWording).toContain('AI')
+    expect(result.bannerWording).toContain('AI personalization is off')
+    expect(result.bannerWording).toContain('Turn on the sharing option above')
+  })
+
+  it('explains a live wording fallback separately when the household opted in', async () => {
+    const result = await buildIndoor({ ...household, shareOptIn: true })
+    expect(result.bannerWording).toContain('AI wording could not load')
+    expect(result.bannerWording).toContain('ask the site owner to check the AI provider setup')
   })
 
   it('includes transport, cooking and no-burning alternatives', async () => {
