@@ -19,6 +19,13 @@ describe('structured model output', () => {
     const result = await completeValidated({ schema, system: 'system', user: 'question', maxTokens: 100, fallback })
     expect(result).toEqual({ data: { answer: 'repaired' }, source: 'model', repaired: true })
     expect(complete).toHaveBeenCalledTimes(2)
+    expect(complete.mock.calls[0]?.[0].messages[0]?.content).toContain('Return exactly one JSON object that matches this schema')
+    expect(complete.mock.calls[0]?.[0].responseSchema).toMatchObject({
+      type: 'object',
+      properties: { answer: { type: 'string' } },
+      required: ['answer'],
+      additionalProperties: false,
+    })
   })
   it('returns the typed fallback after the repair also fails', async () => {
     complete.mockResolvedValue('{"unexpected":true}')

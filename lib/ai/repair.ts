@@ -2,6 +2,19 @@ import { z } from 'zod'
 import { llmComplete } from './client'
 import { repairPrompt } from './prompts'
 
+const providerSchemaUnsupportedKeys = new Set([
+  '$schema', 'maxLength', 'minLength', 'maxItems', 'minItems',
+  'maximum', 'minimum', 'exclusiveMaximum', 'exclusiveMinimum', 'pattern', 'format',
+])
+
+function providerSchema(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(providerSchema)
+  if (!value || typeof value !== 'object') return value
+  return Object.fromEntries(
+    Object.entries(value).filter(([key]) => !providerSchemaUnsupportedKeys.has(key)).map(([key, item]) => [key, providerSchema(item)]),
+  )
+}
+
 export function extractJson(text: string): unknown {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/)
   const raw = fenced?.[1] ?? text
@@ -49,17 +62,20 @@ export async function completeValidated<T>(options: {
   signal?: AbortSignal
 }): Promise<{ data: T; source: 'model' | 'fallback'; repaired: boolean }> {
   if (!process.env.LLM_API_KEY) return { data: options.fallback, source: 'fallback', repaired: false }
+  const responseSchema = providerSchema(z.toJSONSchema(options.schema)) as Record<string, unknown>
+  const system = `${options.system}\nReturn exactly one JSON object that matches this schema. Include every required field, with no extra fields: ${JSON.stringify(responseSchema)}`
   let repaired = false
   let extra = ''
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
       const text = await llmComplete({
         messages: [
-          { role: 'system', content: options.system },
+          { role: 'system', content: system },
           { role: 'user', content: extra ? `${options.user}\n\n${extra}` : options.user },
         ],
         maxTokens: options.maxTokens,
         signal: options.signal,
+        responseSchema,
       })
       const parsed = options.schema.safeParse(extractJson(text))
       if (!parsed.success) {

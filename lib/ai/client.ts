@@ -32,6 +32,7 @@ type CompleteArgs = {
   maxTokens: number
   signal?: AbortSignal
   json?: boolean
+  responseSchema?: Record<string, unknown>
 }
 
 export function requestSignal(signal?: AbortSignal, timeoutMs = 12_000): AbortSignal {
@@ -79,7 +80,11 @@ function openAiBody(config: LlmConfig, args: CompleteArgs, stream: boolean) {
     ...(groq ? { max_completion_tokens: Math.max(args.maxTokens + 512, 1024) } : { max_tokens: args.maxTokens }),
     temperature: 0.2,
     stream,
-    ...(args.json === false ? {} : { response_format: { type: 'json_object' } }),
+    ...(args.json === false
+      ? {}
+      : gptOss && args.responseSchema
+        ? { response_format: { type: 'json_schema', json_schema: { name: 'saans_response', strict: true, schema: args.responseSchema } } }
+        : { response_format: { type: 'json_object' } }),
     ...(gptOss ? { reasoning_effort: 'low', reasoning_format: 'hidden' } : {}),
   }
 }

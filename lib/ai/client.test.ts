@@ -66,7 +66,8 @@ describe('single LLM adapter', () => {
     process.env.LLM_BASE_URL = 'https://api.groq.com/openai'
     global.fetch = jest.fn().mockResolvedValue(response({ choices: [{ message: { content: '{"ok":true}' } }] }))
 
-    await llmComplete({ messages: [{ role: 'user', content: 'Return JSON.' }], maxTokens: 700 })
+    const responseSchema = { type: 'object', properties: { ok: { type: 'boolean' } }, required: ['ok'], additionalProperties: false }
+    await llmComplete({ messages: [{ role: 'user', content: 'Return JSON.' }], maxTokens: 700, responseSchema })
 
     const init = (global.fetch as jest.Mock).mock.calls[0]?.[1] as RequestInit
     const body = JSON.parse(String(init.body))
@@ -74,7 +75,10 @@ describe('single LLM adapter', () => {
     expect(body).not.toHaveProperty('max_tokens')
     expect(body.reasoning_effort).toBe('low')
     expect(body.reasoning_format).toBe('hidden')
-    expect(body.response_format).toEqual({ type: 'json_object' })
+    expect(body.response_format).toEqual({
+      type: 'json_schema',
+      json_schema: { name: 'saans_response', strict: true, schema: responseSchema },
+    })
   })
 
   it('maps Anthropic system messages and Google contents for completion', async () => {
